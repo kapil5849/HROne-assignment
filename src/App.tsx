@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useForm } from "react-hook-form";
+import { Card } from "antd";
+import SchemaBuilder from "./components/SchemaBuilder";
+import { schemaToSampleObject } from "./utils/schemaUtils";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { control, register, setValue, getValues, watch } = useForm({
+    defaultValues: {
+      schema: [],
+    },
+    mode: "all",
+  });
+
+  const schema = watch();
+  const schemaFields = schema.schema || [];
+  const sampleJson = schemaToSampleObject(schemaFields);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        gap: 24,
+        maxWidth: 1200,
+        margin: "40px auto",
+        padding: 16,
+        flexWrap: "wrap",
+      }}
+    >
+      <div style={{ flex: 1, minWidth: 320 }}>
+        <Card title="Schema Builder" style={{ height: "fit-content" }}>
+          <SchemaBuilder
+            control={control}
+            register={register}
+            setValue={setValue}
+            getValues={getValues}
+            name="schema"
+          />
+        </Card>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div
+        style={{
+          flex: 1,
+          minWidth: 320,
+          maxHeight: "80vh",
+          overflow: "auto",
+        }}
+      >
+        <Card title="JSON Preview" style={{ height: "fit-content" }}>
+          <pre
+            style={{
+              background: "#f6f6f6",
+              padding: 16,
+              margin: 0,
+              borderRadius: 4,
+              fontSize: 12,
+              overflow: "auto",
+            }}
+          >
+            {JSON.stringify(sampleJson, null, 2)}
+          </pre>
+        </Card>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <style>
+        {`
+          @media (max-width: 768px) {
+            div[style*="display: flex"] {
+              flex-direction: column !important;
+            }
+          }
+        `}
+      </style>
+    </div>
+  );
 }
 
-export default App
+export default App;
