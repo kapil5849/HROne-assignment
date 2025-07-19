@@ -81,3 +81,6 @@ src/
 ```
 
 **Built with ❤️ for HROne Frontend Intern Hiring Task**
+
+
+Deployed Link: https://hr-one-assignment-chi.vercel.app/
